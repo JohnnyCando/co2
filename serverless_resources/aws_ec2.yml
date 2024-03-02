@@ -1,0 +1,109 @@
+Conditions: ${self:custom.appConditions}
+Resources:
+  # ====================================================================================================================
+  # [DEFINITION] EC2: Instances
+  # ====================================================================================================================
+  EC2WorkspaceInstance:
+    Type: AWS::EC2::Instance
+    Condition: isDevelopment
+    Properties:
+      ImageId: ami-0fef2f5dd8d0917e8
+      InstanceType: t3.micro
+      KeyName: ec2-co2-keypair
+      SecurityGroupIds:
+        - ${self:custom.vpcNetwork.securityGroupId}
+        - !Ref EC2WorkspaceSecurityGroup
+      Tags:
+        - Key: Name
+          Value: ${self:service}-ec2-workspace-instance
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+
+          # [STEP 0] Export Environment Variables 
+          ==============================================================================================================
+          cat > /etc/profile.d/load_env.sh << 'EOF'
+          # export DB_HOST=${DocumentDBCluster.Endpoint}
+          # export DB_PORT=${DocumentDBCluster.Port}
+          # export DB_USER=${self:custom.documentdbMasterUsername}
+          # export DB_PASSWORD=${self:custom.documentdbMasterPassword}
+          export AWS_DEFAULT_REGION=${AWS::Region}
+          EOF
+          chmod a+x /etc/profile.d/load_env.sh
+
+          # [STEP 1] Install NVM + Node
+          ==============================================================================================================
+          # yum update -y
+          # yum install httpd -y
+          # service httpd start
+          # chkconfig httpd on
+          # cat > /tmp/script.sh << EOF
+          # # START
+          # echo "Setting up NodeJS Environment"
+          # curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+
+          # echo 'export NVM_DIR="/home/ec2-user/.nvm"' >> /home/ec2-usr/.bashrc
+          # echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm' >> /home/ec2-user/.bashrc
+
+          # # Dot source the files to ensure that variables are available within the current shell
+          # . /home/ec2-user/.nvm/nvm.sh
+          # . /home/ec2-user/.bashrc
+
+          # # Install Node
+          # nvm install --lts
+          # EOF
+
+          # chown ec2-user:ec2-user /tmp/script.sh && chmod a+x /tmp/script.sh
+          # sleep 1; su - ec2-user -c "/tmp/script.sh"
+
+          # # [STEP 2] Install Mongo Shell
+          # ==============================================================================================================
+          # echo -e "[mongodb-org-7.0] \nname=MongoDB Repository\nbaseurl=https://repo.mongodb.org/yum/amazon/2023/mongodb-org/7.0/x86_64/\ngpgcheck=1 \nenabled=1 \ngpgkey=https://pgp.mongodb.com/server-7.0.asc" |
+          # sudo tee /etc/yum.repos.d/mongodb-org-7.0.repo
+          # sudo yum install -y mongodb-org
+          # sudo yum remove mongodb-mongosh -y
+          # sudo yum install mongodb-mongosh-shared-openssl3 -y
+          # sudo yum install mongodb-mongosh -y
+
+  EC2WorkspaceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Condition: isDevelopment
+    Properties:
+      GroupName: ${self:service}-sg-workspace
+      GroupDescription: Allow SSH traffic
+      VpcId: ${self:custom.vpcNetwork.vpcId}
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          CidrIp: 0.0.0.0/0
+          FromPort: 22
+          ToPort: 22
+          Description: SSH Access
+        - IpProtocol: tcp
+          CidrIpv6: ::/0
+          FromPort: 22
+          ToPort: 22
+          Description: SSH Access
+        - IpProtocol: tcp
+          CidrIp: 0.0.0.0/0
+          FromPort: 27017
+          ToPort: 27017
+          Description: DocumentDB Access
+        - IpProtocol: tcp
+          CidrIpv6: ::/0
+          FromPort: 27017
+          ToPort: 27017
+          Description: DocumentDB Access
+        - IpProtocol: tcp
+          CidrIp: 0.0.0.0/0
+          FromPort: 3000
+          ToPort: 3000
+          Description: Backend access
+
+# ======================================================================================================================
+# [OUTPUTS] INFORMATION > Log information
+# ======================================================================================================================
+Outputs:
+  EC2WorkspaceInstancePublicIP:
+    Condition: isDevelopment
+    Description: EC2 Workspace Instance Public IP
+    Value: !GetAtt EC2WorkspaceInstance.PublicIp

@@ -1,0 +1,101 @@
+Resources:
+  # ====================================================================================================================
+  # [DEFINITION] BUCKET APP > Bucket space to deploy frontend app (Panel + Application + Simulator)
+  # ====================================================================================================================
+  S3BucketBackofficeWebapp:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: ${self:custom.s3BucketBackofficeWebappName}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: ObjectWriter
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: index.html
+  
+  S3BucketBackofficeWebappOriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Sub cf_access_identity_${S3BucketBackofficeWebapp}
+
+  # ====================================================================================================================
+  # [DEFINITION] BUCKET POLICY > Public access (Backoffice)
+  # ====================================================================================================================
+  # S3BucketBackofficeWebappPolicy:
+  #   Type: AWS::S3::BucketPolicy
+  #   Properties:
+  #     Bucket:
+  #       Ref: S3BucketBackofficeWebapp
+  #     PolicyDocument:
+  #       Statement:
+  #         - Sid: PublicReadGetObject
+  #           Effect: Allow
+  #           Action:
+  #             - s3:GetObject
+  #           Resource: arn:aws:s3:::${self:custom.s3BucketBackofficeWebappName}/*
+  #           Principal:
+  #             CanonicalUser: !GetAtt S3BucketBackofficeWebappOriginAccessIdentity.S3CanonicalUserId
+  S3BucketBackofficeWebappPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: S3BucketBackofficeWebapp
+      PolicyDocument:
+        Statement:
+          - Sid: PublicReadGetObject
+            Effect: Allow
+            Action:
+              - s3:GetObject
+            Resource: arn:aws:s3:::${self:custom.s3BucketBackofficeWebappName}/*
+            Principal: '*'
+
+  # ====================================================================================================================
+  # [DEFINITION] BUCKET APP STORAGE > Bucket space to save multimedia files (with CORS)
+  # ====================================================================================================================
+  S3BucketStorage:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: ${self:custom.s3BucketStorageName}
+      VersioningConfiguration:
+        Status: Enabled
+      CorsConfiguration:
+        CorsRules:
+          - AllowedOrigins:
+              - '*'
+            AllowedHeaders:
+              - '*'
+            AllowedMethods:
+              - GET
+              - HEAD
+              - PUT
+              - POST
+              - DELETE
+            MaxAge: 3000
+            ExposedHeaders:
+              - x-amz-server-side-encryption
+              - x-amz-request-id
+              - x-amz-id-2
+              - ETag
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+
+# ======================================================================================================================
+# [OUTPUTS] INFORMATION > Log information
+# ======================================================================================================================
+Outputs:
+  S3BucketBackofficeWebappArn:
+    Description: ARN Bucket application frontend operation
+    Value: !GetAtt S3BucketBackofficeWebapp.Arn
+  S3BucketBackofficeWebappURL:
+    Description: URL Bucket application frontend URL
+    Value: !GetAtt S3BucketBackofficeWebapp.WebsiteURL
+
+  S3BucketStorage:
+    Description: ARN Bucket application storage files
+    Value: !GetAtt S3BucketStorage.Arn

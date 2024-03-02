@@ -1,0 +1,18 @@
+functions:
+
+  # API ================================================================================================================
+  api:
+    name: ${self:service}-${self:provider.stage}-api
+    handler: dist/handler.api
+    events:
+      - http:
+          method: ANY
+          path: /
+          cors: true
+      - http:
+          method: ANY
+          path: '{proxy+}'
+          cors: true
+    vpc:
+      securityGroupIds: ${self:custom.vpcNetwork.securityGroupId}
+      subnetIds: ${self:custom.vpcNetwork.subnetIds}

@@ -1,0 +1,27 @@
+# ======================================================================================================================
+# [DEFINITION] ENVIRONMENT CONFIGURATIONS
+# ======================================================================================================================
+environment:
+  production:
+    # AWS VPC
+    vpcNetwork: ${file(serverless_resources/aws_vpc.yml):${self:provider.stage}_security}
+  staging:
+    # AWS VPC
+    vpcNetwork: ${file(serverless_resources/aws_vpc.yml):${self:provider.stage}_security}
+  development:
+    # AWS VPC
+    vpcNetwork: ${file(serverless_resources/aws_vpc.yml):${self:provider.stage}_security}
+
+conditions:
+  isProduction:
+    Fn::Equals:
+      - ${self:provider.stage}
+      - production
+  isStaging:
+    Fn::Equals:
+      - ${self:provider.stage}
+      - staging
+  isDevelopment:
+    Fn::Equals:
+      - ${self:provider.stage}
+      - development
