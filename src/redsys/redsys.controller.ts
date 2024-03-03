@@ -40,12 +40,10 @@ export class RedsysController {
 
     return await this.redsysService.returnOKPayment(Ds_SignatureVersion,Ds_MerchantParameters,Ds_Signature,lang,user);
   }
-@Post('returFormView')
-  async returnedRedsysProcessOK(@Req() req: Request, @Body() body) {
-    console.log('hola')
-    console.log('req', req)
-    console.log('body',body)
-    return 'exitoso'
+@Post('returFormView/:lang/:user')
+  async returnedRedsysProcessOK(@Param('lang') lang:string,@Param('user') user:string ,@Req() req: Request, @Body() body) {
+    const {Ds_SignatureVersion, Ds_MerchantParameters,Ds_Signature} = body
+    return await this.redsysService.returnOKPayment(Ds_SignatureVersion,Ds_MerchantParameters,Ds_Signature,lang,user);
   }
   @Auth(Role.CLIENTE)
   @Post('genereteForm')

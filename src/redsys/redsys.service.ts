@@ -67,7 +67,7 @@ export class RedsysService {
       DS_MERCHANT_CURRENCY: '978',
       DS_MERCHANT_TRANSACTIONTYPE: '0',
       DS_MERCHANT_TERMINAL: '001',
-      DS_MERCHANT_MERCHANTURL: `${process.env.API_HOST}redsys/returFormView`,
+      DS_MERCHANT_MERCHANTURL: `${process.env.API_HOST}redsys/returFormView/${lang}/${user}`,
       DS_MERCHANT_URLOK: `${process.env.API_HOST}redsys/returnOK`,
       DS_MERCHANT_URLKO: `${process.env.API_HOST}redsys/returnKO`,
       DS_MERCHANT_MERCHANTNAME: 'Huella Co2 APP',
