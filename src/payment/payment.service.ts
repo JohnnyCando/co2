@@ -4,6 +4,7 @@ import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { Payment } from './entities/payment.entity'
 import { join,resolve } from 'path';
 import { throwError } from 'rxjs';
+import * as fs from 'fs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { MailerService } from '@nestjs-modules/mailer';
@@ -38,10 +39,18 @@ export class PaymentService {
     }
   async createReceiptandEmail(lang,id){
     let pdfBuffer = await this.generatePDFReceipt(lang)
-    const tempFilePath  = await writeFile(`src/assets/tmp/${id}.pdf`, pdfBuffer);
-    console.log(tempFilePath)
-    const path =`src/assets/tmp/${id}.pdf` 
-    return path
+    const rutaDeseada = resolve(__dirname, '..', '..', '..');
+    const finalRoute = `${rutaDeseada}/files/`;
+    const rutaArchivo = join(
+      finalRoute,
+      `${id}.pdf`,
+    );
+    if (!fs.existsSync(finalRoute)) {
+      fs.mkdirSync(finalRoute, { recursive: true }); // Crea la carpeta y sus subdirectorios de forma recursiva
+    }
+    console.log(rutaArchivo)
+    const tempFilePath = await writeFile(rutaArchivo, pdfBuffer);
+    return rutaArchivo
   }
   async sendEmailPDF(tempFilePath,user,lang,id) {
     console.log('entre')
