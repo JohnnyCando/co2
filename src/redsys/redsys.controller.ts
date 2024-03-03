@@ -40,7 +40,7 @@ export class RedsysController {
 
     return await this.redsysService.returnOKPayment(Ds_SignatureVersion,Ds_MerchantParameters,Ds_Signature,lang,user);
   }
-@Get('returFormView')
+@Post('returFormView')
   async returnedRedsysProcessOK(@Req() req: Request, @Body() body) {
     console.log('hola')
     console.log('req', req)
