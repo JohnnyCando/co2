@@ -39,6 +39,7 @@ export class RedsysService {
       let payment = await this.paymentService.update(params.Ds_Order,{state:'PAID'})
       let footprint = await this.footprintService.update(payment.footprint_id,{payment_id:payment.id.toString(),pay_at: new Date()})
       let message  = await this.paymentService.create(payment,lang,user_id)
+      console.log(footprint)
       return {
         payment,
         message}
