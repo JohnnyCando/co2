@@ -5,10 +5,11 @@ const { Redsys } = require('node-redsys-api');
 import { PaymentService } from 'src/payment/payment.service';
 import fetch from 'node-fetch';
 import { Payment } from 'src/payment/entities/payment.entity';
+import { FootprintHistoryService } from 'src/footprint-history/footprint-history.service';
 
 @Injectable()
 export class RedsysService {
-    constructor(private paymentService : PaymentService){
+    constructor(private paymentService : PaymentService, private footprintService : FootprintHistoryService){
         
     }
   create(createRedsyDto: CreateRedsyDto) {
@@ -36,10 +37,13 @@ export class RedsysService {
     const signatureIsValid = redsys.merchantSignatureIsValid(Ds_Signature, params);
     if(params.Ds_Response==='0000'){
       let payment = await this.paymentService.update(params.Ds_Order,{state:'PAID'})
+      let footprint = await this.footprintService.update(payment.footprint_id,{payment_id:payment.id.toString(),pay_at: new Date()})
       let message  = await this.paymentService.create(payment,lang,user_id)
       return {
         payment,
         message}
+    }else{ 
+      return await this.paymentService.remove(params.Ds_Order)
     }
 
   }

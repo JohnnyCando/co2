@@ -14,7 +14,7 @@ export class PaymentController {
   @Get('pdfDownload')
   async generatePDF(@Res() res, @Req() req :Request):Promise<void>{
     let lang = req.headers['lang']
-    const buffer = await this.paymentService.generatePDFReceipt(lang)
+    const buffer = await this.paymentService.generatePDFReceipt(lang,lang)
     res.set({
       'Content-Type':'application/pdf',
       'Content-Disposition':'attachment: filename=ReceiptTest.pdf',

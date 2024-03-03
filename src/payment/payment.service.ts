@@ -29,7 +29,7 @@ export class PaymentService {
       let idObject = new ObjectId(user_id)
      const user = await User.findOneBy(idObject);
       if(createpaymentDto){
-        const tempFilePath = await this.createReceiptandEmail(lang,createpaymentDto.id)
+        const tempFilePath = await this.createReceiptandEmail(lang,createpaymentDto)
         console.log(tempFilePath)
          await this.sendEmailPDF(tempFilePath,user,lang,createpaymentDto.id)
       }else{
@@ -37,13 +37,13 @@ export class PaymentService {
       }
       return {message:'Email send succesfully'}
     }
-  async createReceiptandEmail(lang,id){
-    let pdfBuffer = await this.generatePDFReceipt(lang)
+  async createReceiptandEmail(lang,payment){
+    let pdfBuffer = await this.generatePDFReceipt(lang,payment)
     const rutaDeseada = resolve(__dirname, '..', '..', '..');
     const finalRoute = `${rutaDeseada}/files/`;
     const rutaArchivo = join(
       finalRoute,
-      `${id}.pdf`,
+      `${payment.id}.pdf`,
     );
     if (!fs.existsSync(finalRoute)) {
       fs.mkdirSync(finalRoute, { recursive: true }); // Crea la carpeta y sus subdirectorios de forma recursiva
@@ -93,7 +93,7 @@ export class PaymentService {
       subject: subject_text,
       text: text_first,
       attachments: [{
-        filename: `${id}_receipt_compensation.pdf`,
+        filename: `${id}_compensation.pdf`,
         path: tempFilePath,
         contentType: 'application/pdf',
       }],
@@ -104,7 +104,7 @@ export class PaymentService {
     findAll() {
       return Payment.find()
     }
-    async generatePDFReceipt(lang): Promise<Buffer> {
+    async generatePDFReceipt(lang,payment): Promise<Buffer> {
       console.log(lang)
       let text_legal_bottom = 'En vista del cumpliemiento de la normativa europea 2016/679 sobre Protección de datos (RGPD) le informamos que el tratamiento de los datos proporcionados por Ud. será responsabilidad de (Nombre de repsonsables, representantes o delegados de tratamiento) con el objetivo de ( Finalidad del Tratamiento), y que además se compromete.'
       let text_header_label_user='Datos Usuario'
@@ -251,7 +251,7 @@ export class PaymentService {
           title: text_table.text_label_header,
           subtitle: " ",
           headers: [`${text_table.text_headers_options.text_compensation}`,`${text_table.text_headers_options.text_implication}`,`${text_table.text_headers_options.text_total}`],
-          rows: [["2000 CO2","120%","109€"]]
+          rows: [[`${payment.compensation_amount}`,`${payment.percentage_compensation}`,`${payment.price}`]]
         };
         const styles = {
           header: {
@@ -294,6 +294,9 @@ export class PaymentService {
         where: {
           user_id: {
             $eq: user.id
+          },
+          state: {
+            $eq:'PAID'
           }
         },
         order: {
