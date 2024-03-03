@@ -251,7 +251,7 @@ export class PaymentService {
           title: text_table.text_label_header,
           subtitle: " ",
           headers: [`${text_table.text_headers_options.text_compensation}`,`${text_table.text_headers_options.text_implication}`,`${text_table.text_headers_options.text_total}`],
-          rows: [[`${payment.compensation_amount}`,`${payment.percentage_compensation}`,`${payment.price}`]]
+          rows: [[`${payment.compensation_amount}`,`${payment.implication}`,`${payment.total_value / 100}€`]]
         };
         const styles = {
           header: {
