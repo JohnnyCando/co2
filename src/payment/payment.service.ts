@@ -105,7 +105,7 @@ export class PaymentService {
       return Payment.find()
     }
     async generatePDFReceipt(lang,payment): Promise<Buffer> {
-      console.log(lang)
+      console.log(payment)
       let text_legal_bottom = 'En vista del cumpliemiento de la normativa europea 2016/679 sobre Protección de datos (RGPD) le informamos que el tratamiento de los datos proporcionados por Ud. será responsabilidad de (Nombre de repsonsables, representantes o delegados de tratamiento) con el objetivo de ( Finalidad del Tratamiento), y que además se compromete.'
       let text_header_label_user='Datos Usuario'
       let text_header_label_acciona='Datos fiscales Acciona'
