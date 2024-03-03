@@ -46,9 +46,9 @@ import { FootprintCategory } from './footprint-category/entities/footprint-categ
     TypeOrmModule.forRoot({
       name: 'default',
       type: 'mongodb',
-      url: process.env.DB_USERNAME ? `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/Acciona_co2_db?retryWrites=false`:`mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/Acciona_co2_db?retryWrites=false`,
+      url:  `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/Acciona_co2_db?retryWrites=false`,
       useNewUrlParser:true,
-      useUnifiedTopology: true,
+      useUnifiedTopology: false,
       autoLoadEntities: true,
       synchronize:true,
       entities: [
