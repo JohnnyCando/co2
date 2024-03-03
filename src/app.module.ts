@@ -48,7 +48,7 @@ import { FootprintCategory } from './footprint-category/entities/footprint-categ
       type: 'mongodb',
       url:  `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/Acciona_co2_db?retryWrites=false`,
       useNewUrlParser:true,
-      useUnifiedTopology: false,
+      useUnifiedTopology: true,
       autoLoadEntities: true,
       synchronize:true,
       entities: [
