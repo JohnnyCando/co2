@@ -27,7 +27,7 @@ export class PaymentController {
     return this.paymentService.findAll();
   }
   @Auth(Role.CLIENTE)
-  @Get('getLastPayment')
+  @Get('/find/getLastPayment')
   async getLastPayment(@Req() req : Request){
     let user = req['user']
     return await this.paymentService.findLastPayment(user)
