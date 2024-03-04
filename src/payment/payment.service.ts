@@ -87,7 +87,7 @@ export class PaymentService {
       default:
         break;
     }
-    return await this.mailerService.sendMail({
+    await this.mailerService.sendMail({
       to: user.email,
       from: 'infogfmemories@gmail.com',
       subject: subject_text,
@@ -99,6 +99,8 @@ export class PaymentService {
       }],
       html: html_text,
     });
+    //remove file 
+    return await fs.unlinkSync(`${tempFilePath}`)
     
   }
     findAll() {

@@ -22,23 +22,11 @@ export class RedsysController {
   @Auth(Role.CLIENTE)
   @Post('returnKO')
   async returnedRedsysKO(@Req() req: Request) {
-    let user = req['user']
-    return 'exitoso'
+
   }
   @Auth(Role.CLIENTE)
   @Post('/returnOK')
   async returnedRedsysOK(@Req() req: Request,@Body() body,) {
-      let user = req['user']
-      let lang = req.headers['lang']
-      
-      const {url } = body
-      const paramsSplit = url.split('?')[1]
-      const redsysDataSplit = paramsSplit.split('&')
-      const Ds_SignatureVersion = redsysDataSplit[0].split('Ds_SignatureVersion=')[1]
-      const Ds_MerchantParameters = redsysDataSplit[1].split('Ds_MerchantParameters=')[1]
-      const Ds_Signature = redsysDataSplit[2].split('Ds_Signature=')[1]
-
-    return await this.redsysService.returnOKPayment(Ds_SignatureVersion,Ds_MerchantParameters,Ds_Signature,lang,user);
   }
 @Post('returFormView/:lang/:user')
   async returnedRedsysProcessOK(@Param('lang') lang:string,@Param('user') user:string ,@Req() req: Request, @Body() body) {
