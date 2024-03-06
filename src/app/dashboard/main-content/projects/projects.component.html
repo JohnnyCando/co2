@@ -1,0 +1,95 @@
+<section class="h-100 w-100">
+    <div class="row">
+        <div class="col-md-10">
+            <h1>Proyectos</h1>
+        </div>
+        <div class="col-md-2" style="text-align: right;">
+            <button class="btn btn-danger rounded-pill" (click)="openModalProject()">+ Crea un proyecto nuevo</button>
+        </div>
+    </div>
+    <div class="row mt-4 h-100" style="text-align: center;">
+        <div class="col-md-12">
+            @if(isLoading) {
+                <div class="w-100 d-flex justify-content-center">
+                    <app-loader></app-loader>
+                </div>
+            } @else {
+                @if(projectsInfo.data.length > 0 ) {
+                    <div class="mat-elevation-z8 p-3">
+                        <div class="input-group">
+                            <input (keyup)="applyFilter($event)" class="form-control" placeholder="Busque el proyecto">
+                            <!-- <button class="btn btn-outline-danger" type="button" (click)="openModalCredits()">Configuración de créditos <i class="bi bi-gear-fill"></i></button> -->
+                        </div>
+                    </div>
+                    <table mat-table [dataSource]="projectsInfo" class="mat-elevation-z8 align-middle">
+
+                        <ng-container matColumnDef="identify_lang_project_id">
+                            <th mat-header-cell *matHeaderCellDef> Identificador </th>
+                            <td mat-cell *matCellDef="let element"> {{element.identify_lang_project_id}} </td>
+                        </ng-container>
+            
+                        <ng-container matColumnDef="name">
+                            <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                            <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+                        </ng-container>
+    
+                        <ng-container matColumnDef="email">
+                            <th mat-header-cell *matHeaderCellDef> Email </th>
+                            <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="lang">
+                            <th mat-header-cell *matHeaderCellDef> Idioma </th>
+                            <td mat-cell *matCellDef="let element">
+                                {{mapLanguage(element.lang)}}
+                            </td>
+                        </ng-container>
+    
+                        <ng-container matColumnDef="activate">
+                            <th mat-header-cell *matHeaderCellDef class="text-center"> Estado </th>
+                            <td mat-cell *matCellDef="let element" class="text-center align-middle">
+                                <!-- <mat-slide-toggle [checked]="element.is_active" (change)="toggleActivationProject($event, element)" color="primary">
+                                    {{ element?.is_active ? 'Activado' : 'Desactivado' }}
+                                </mat-slide-toggle> -->
+                                {{ element?.is_active ? 'Publicado' : 'Borrador' }}
+                            </td>
+                        </ng-container>
+    
+                        <ng-container matColumnDef="actions">
+                            <th mat-header-cell *matHeaderCellDef class="text-center"> Acciones </th>
+                            <td mat-cell *matCellDef="let element" class="text-center align-middle">
+                                <button
+                                    type="button"
+                                    mat-icon-button
+                                    matTooltip="Editar proyecto"
+                                    color="primary"
+                                    (click)="openModalProject(element, true)"
+                                ><mat-icon>edit</mat-icon></button>
+                                <button
+                                    type="button"
+                                    mat-icon-button
+                                    color="warn"
+                                    matTooltip="Eliminar proyecto"
+                                    (click)="deleteProject(element)"
+                                ><mat-icon>delete</mat-icon></button>
+                            </td>
+                        </ng-container>
+                        
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                    <mat-paginator
+                        [length]="projectsInfo.data.length"
+                        [pageSize]="10"
+                        [pageSizeOptions]="[10, 20, 30]"
+                        showFirstLastButtons
+                        aria-label="Selecciona la página de proyectos"
+                        class="mat-elevation-z8">
+                    </mat-paginator>
+                } @else {
+                    <p>No hay ningún proyecto creado.</p>
+                }
+            }
+        </div>
+    </div>
+</section>

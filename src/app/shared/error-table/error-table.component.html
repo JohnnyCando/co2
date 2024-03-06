@@ -1,0 +1,23 @@
+<div>
+  <div class="d-flex justify-content-end">
+    <button mat-icon-button type="button" color="warn" (click)="close()"><mat-icon>close</mat-icon></button>
+  </div>
+  <table mat-table [dataSource]="data">
+      <ng-container matColumnDef="identifier">
+        <mat-header-cell *matHeaderCellDef> Identificador </mat-header-cell>
+        <mat-cell *matCellDef="let error"> {{ error.identifier }} </mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="lang">
+        <mat-header-cell *matHeaderCellDef> Idioma </mat-header-cell>
+        <mat-cell *matCellDef="let error"> {{ error.lang }} </mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="message">
+        <mat-header-cell *matHeaderCellDef> Mensaje de error </mat-header-cell>
+        <mat-cell *matCellDef="let error"> {{ error.error_message }} </mat-cell>
+      </ng-container>
+  
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </table>
+</div>

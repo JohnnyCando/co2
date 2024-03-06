@@ -1,0 +1,216 @@
+<div class="bg-white h-100">
+    @if(isLoading) {
+        <div class="container h-100 d-flex justify-content-center align-items-center">
+            <app-loader></app-loader>
+        </div>
+    } @else {
+        <form (ngSubmit)="submitData()" [formGroup]="projectForm" novalidate>
+            <h6 class="text-secondary" mat-dialog-title>
+                {{ dialogData.isEdit ? 'Modificar proyecto' : 'Crear proyecto' }}
+            </h6>
+            <mat-dialog-content>
+                @if(projectExists) {
+                    <div class="row w-100">
+                        <div class="col-12">
+                            <div class="alert alert-danger" role="alert">
+                                {{ errorMessage }}
+                            </div>
+                        </div>
+                    </div>
+                }
+                <mat-tab-group>
+                    <mat-tab label="Localización">
+                        <div class="w-100 h-100">
+                            <label class="h6 mb-2">Localización*: </label>
+                            <app-google-map
+                                [initialCoords]="initialCoords"
+                                (coordsSelected)="getCoordinates($event)"
+                            ></app-google-map>
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="Información general">
+                        <div class="row w-100">
+                            <div class="col-6">
+                                <label class="h6 mb-2">Nombre identificativo del proyecto*:</label>
+                                <mat-form-field class="w-100">
+                                    <input matInput (change)="checkItemExists($event)" placeholder="Nombre identificativo" class="content-text-area" formControlName="identify_lang_project_id"/>
+                                    @if (f['identify_lang_project_id'].errors) {
+                                        <mat-error>
+                                            @if (f['identify_lang_project_id'].errors['required']) {
+                                                El nombre identificativo es obligatorio
+                                            }
+                                        </mat-error>
+                                    }
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <label class="h6 mb-2">Idioma*:</label>
+                                <mat-form-field class="w-100">
+                                    <mat-select formControlName="lang" (selectionChange)="checkItemExists($event)">
+                                        <mat-option [value]="''">Seleccione</mat-option>
+                                        <mat-option [value]="'es'">Castellano</mat-option>
+                                        <mat-option [value]="'en'">Inglés</mat-option>
+                                        <!-- <mat-option [value]="'ca'">Catalán</mat-option>
+                                        <mat-option [value]="'gl'">Gallego</mat-option>
+                                        <mat-option [value]="'eu'">Euskera</mat-option> -->
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row w-100">
+                            <div class="col-6">
+                                <label class="h6 mb-2">Categoría*:</label>
+                                <mat-form-field class="w-100">
+                                    <input type="text" matInput placeholder="Categoría del proyecto" formControlName="category">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <label class="h6 mb-2">Nombre del proyecto*:</label>
+                                <mat-form-field class="w-100">
+                                    <input type="text" matInput placeholder="Nombre del proyecto" formControlName="name">
+                                    @if (f['name'].errors) {
+                                        <mat-error>
+                                            @if (f['name'].errors['required']) {
+                                                El nombre es obligatorio
+                                            }
+                                        </mat-error>
+                                    }
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row w-100">
+                            <div class="col-12">
+                                <label class="h6 mb-2">Lema*:</label>
+                                <mat-form-field class="w-100">
+                                    <textarea
+                                        matInput
+                                        placeholder="Lema del proyecto"
+                                        cdkTextareaAutosize
+                                        #autosize="cdkTextareaAutosize"
+                                        formControlName="slogan"
+                                    ></textarea>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        @if(f['lang'].value === 'es') {
+                            <div class="row w-100">
+                                <div class="col-12">
+                                    <label class="h6 mb-2">Imagen*: </label><span> Debe ser del tamaño 780px de ancho por 1624px de alto. En formato vertical</span>
+                                    <div class="d-flex gap-2">
+                                        <input type="file" (change)="onFileSelected($event)" class="form-control h-100" #fileInput>
+                                        @if(previewUrl) {
+                                            <button type="button" color="warn" mat-icon-button (click)="onRemoveImage(fileInput)"><mat-icon>close</mat-icon></button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            @if(previewUrl) {
+                                <div class="row w-100 mt-1">
+                                    <div class="col-12 align-top">
+                                        <img [src]="previewUrl" alt="Vista previa de la imagen" maxHeight="200px">
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </mat-tab>
+                    <mat-tab label="Descripción del proyecto">
+                        <div class="row w-100">
+                            <div class="col-12">
+                                <label class="h6 mb-2">Correo de contacto para el proyecto*:</label>
+                                <mat-form-field class="w-100">
+                                    <input type="text" matInput placeholder="Email" formControlName="email">
+                                    @if (f['email'].errors) {
+                                        <mat-error>
+                                            @if (f['email'].errors['required']) {
+                                                El correo es obligatorio
+                                            } @else if (f['email'].errors['email']) {
+                                                Tiene que ser un correo electróncio
+                                            }
+                                        </mat-error>
+                                    }
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row w-100">
+                            <div class="col-12">
+                                <label class="h6 mb-2">Descripción del proyecto*:</label>
+                                <angular-editor formControlName="description" [config]="editorConfig"></angular-editor>
+                            </div>
+                        </div>
+                        <div class="row w-100 mt-3">
+                            <label class="h6 mb-2">Información de la localización:</label>
+                            <ng-container formArrayName="location_info">
+                                <div *ngFor="let item of location_info?.controls; let i = index" [formGroupName]="i">
+                                    <div class="w-100 d-flex gap-2">
+                                        <mat-form-field class="w-100">
+                                            <input
+                                                matInput
+                                                formControlName="label"
+                                                type="text"
+                                                placeholder="Nombre del campo"
+                                                maxlength="16"
+                                            />
+                                        </mat-form-field>
+                                        <mat-form-field class="w-100">
+                                            <input
+                                                matInput
+                                                formControlName="value"
+                                                type="text"
+                                                placeholder="Valor del campo"
+                                                maxlength="22"
+                                            />
+                                        </mat-form-field>
+                                        <button
+                                            (click)="removeValueFormArray(i)"
+                                            color="warn"
+                                            mat-icon-button
+                                        >
+                                            <mat-icon>delete</mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="w-100 mt-2">
+                                    <button
+                                        type="button"
+                                        (click)="addValueFormArray()"
+                                        mat-stroked-button
+                                        color="warn"
+                                        class="float-left"
+                                        [disabled]="this.location_info.length >= 5"
+                                    >
+                                        <mat-icon>add</mat-icon> Añadir un campo
+                                    </button>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-dialog-content>
+            <mat-dialog-actions class="p-4 position-absolute bg-white gap-2" style="bottom: 0; right: 0;">
+                <button
+                    type="button"
+                    color="primary"
+                    class="btn btn-danger rounded-pill"
+                    [disabled]="!state"
+                    (click)="unpublish()">
+                    Pasar a borrador
+                </button>
+                <button
+                    type="submit"
+                    color="primary"
+                    class="btn btn-danger rounded-pill"
+                    [disabled]="checkValiditySave()"
+                    (click)="saveData()">
+                    Guardar
+                </button>
+                <button
+                    type="submit"
+                    color="primary"
+                    class="btn btn-danger rounded-pill"
+                    [disabled]="!projectForm.valid">
+                    Guardar y publicar
+                </button>
+            </mat-dialog-actions>
+        </form>
+    }
+</div>

@@ -1,0 +1,27 @@
+<div class="d-flex flex-column h-100">
+    <img src="../../../assets/imgs/acciona_leaf_logo.png" width="100%">
+    <mat-nav-list class="pt-5 text-center">
+        @for (tab of tabs; track tab) {
+            @if(tabs.length > 1) {
+                <a mat-list-item [routerLink]="[tab.link]">{{ tab.label }}</a>
+            }
+        }
+        <mat-divider class="my-3"></mat-divider>
+        <div class="d-flex justify-content-center">
+            <a mat-list-item class="py-3 d-flex gap-2" (click)="openModalCredits()">
+                <span class="align-self-center">Configuración Global </span>
+                <i class="bi bi-gear-fill"></i>
+            </a>
+        </div>
+    </mat-nav-list>
+    <mat-nav-list class="mt-auto text-center">
+        <div class="d-flex justify-content-center align-items-center">
+            <a mat-list-item class="py-5" (click)="logout()">
+              <mat-icon>person_outline</mat-icon><br><span>Logout</span>
+            </a>
+        </div>
+        <div class="d-flex justify-content-center align-items-center">
+            <span>v1.0.1</span>
+        </div>
+    </mat-nav-list>
+</div>

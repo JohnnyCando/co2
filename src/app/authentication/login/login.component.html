@@ -1,0 +1,71 @@
+<div class="h-100 d-flex justify-content-center align-items-center bg-light">
+    <mat-card class="card bg-white text-center p-3" style="width: 30vw; height: 60vh;">
+        @if(isLoading) {
+            <div class="container h-100 d-flex justify-content-center align-items-center">
+                <app-loader></app-loader>
+            </div>
+        } @else {
+            <div class="text-center">
+                <img src="../../../assets/imgs/acciona_logo.png" width="40%">
+            </div>
+            <mat-card-title class="my-3">Identifícate</mat-card-title>
+            <mat-card-content class="card-body">
+                <div class="row justify-content-center">
+                    <form [formGroup]="loginForm" (ngSubmit)="submit()">
+                        <div class="row justify-content-center">
+                            <mat-form-field class="w-75">
+                                <input type="text" matInput placeholder="Email" formControlName="email">
+                                @if (f['email'].errors) {
+                                    <mat-error>
+                                        @if (f['email'].errors['required']) {
+                                            El email es obligatorio
+                                        }
+                                        @if (f['email'].errors['email']) {
+                                            El email es inválido
+                                        }
+                                    </mat-error>
+                                }
+                            </mat-form-field>
+                        </div>
+                        <div class="row justify-content-center">
+                            <mat-form-field class="w-75">
+                                <input [type]="hide ? 'password' : 'text'" matInput placeholder="Contraseña" formControlName="password">
+                                <button mat-icon-button type="button" matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                                @if (f['password'].errors) {
+                                    <mat-error>
+                                        @if (f['password'].errors['required']) {
+                                            La contraseña es obligatoria
+                                        }
+                                        @if (f['password'].errors['minlength']) {
+                                            La contraseña debe ser al menos de 6 caracteres
+                                        }
+                                        @if (f['password'].errors['maxlength']) {
+                                            La contraseña no puede ser mayor que 40 caracteres
+                                        }
+                                    </mat-error>
+                                }
+                            </mat-form-field>
+                        </div>
+                
+                        <div class="row text-align-center">
+                            <div class="col-12">
+                                <button
+                                    type="submit"
+                                    color="primary"
+                                    class="btn btn-danger rounded-pill px-3"
+                                    [disabled]="!loginForm.valid">
+                                    Iniciar sesión
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row justify-content-center mt-5">
+                        <span>¿Has olvidado tu contraseña? Clica  <a class="button" routerLink="/authenticate/code">aquí</a> para resetearla</span>
+                    </div>
+                </div>
+            </mat-card-content>
+        }
+    </mat-card>
+</div>

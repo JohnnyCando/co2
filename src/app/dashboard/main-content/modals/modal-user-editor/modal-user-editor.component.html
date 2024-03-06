@@ -1,0 +1,66 @@
+<div class="bg-white h-100">
+    @if(isLoading) {
+        <div class="container h-100 d-flex justify-content-center align-items-center">
+            <app-loader></app-loader>
+        </div>
+    } @else {
+        <form (ngSubmit)="submitData()" [formGroup]="userForm" novalidate>
+            <h6 class="text-secondary" mat-dialog-title>
+                {{ dialogData.isEdit ? 'Modificar usuario' : 'Crear usuario' }}
+            </h6>
+            <mat-dialog-content>
+                <div class="row w-100">
+                    <div class="col-12">
+                        <label class="h6 mb-2">Nombre:</label>
+                        <mat-form-field class="w-100">
+                            <input matInput placeholder="Nombre" class="content-text-area" formControlName="name"/>
+                            @if (f['name'].errors) {
+                                <mat-error>
+                                    @if (f['name'].errors['required']) {
+                                        El nombre es obligatorio
+                                    }
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row w-100">
+                    <div class="col-12">
+                        <label class="h6 mb-2">Email:</label>
+                        <mat-form-field class="w-100">
+                            <input matInput placeholder="Email" class="content-text-area" formControlName="email"/>
+                            @if (f['email'].errors) {
+                                <mat-error>
+                                    @if (f['email'].errors['required']) {
+                                        El email es obligatorio
+                                    }
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                </div>
+                <!-- <div class="row w-100">
+                    <div class="col-12">
+                        <label class="h6 mb-2">Rol:</label>
+                        <mat-form-field class="w-100">
+                            <mat-select formControlName="role">
+                                <mat-option [value]="''">Seleccione</mat-option>
+                                <mat-option [value]="'CLIENTE'">Cliente</mat-option>
+                                <mat-option [value]="'ADMIN'">Administrador</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div> -->
+            </mat-dialog-content>
+            <mat-dialog-actions class="p-4 position-absolute bg-white" style="bottom: 0; right: 0;">
+                <button
+                    type="submit"
+                    color="primary"
+                    class="btn btn-danger rounded-pill"
+                    [disabled]="!userForm.valid">
+                    Guardar
+                </button>
+            </mat-dialog-actions>
+        </form>
+    }
+</div>

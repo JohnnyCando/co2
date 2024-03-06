@@ -1,0 +1,93 @@
+<div class="bg-white h-100">
+    @if(isLoading) {
+        <div class="container h-100 d-flex justify-content-center align-items-center">
+            <app-loader></app-loader>
+        </div>
+    } @else {
+        <form (ngSubmit)="submitData()" [formGroup]="globalConfigForm" novalidate>
+            <div class="position-sticky top-0 bg-white">
+                <h6 class="text-secondary" mat-dialog-title>Configuración Global</h6>
+            </div>
+            <mat-dialog-content>
+                <div class="row w-100" formGroupName="compensation_percentage">
+                    <label class="h6 mb-2">Porcentajes de Compensación:</label>
+                    <div class="col-4">
+                        <label class="h7 mb-2">Mínimo:</label>
+                        <mat-form-field class="w-100">
+                            <input matInput type="number" placeholder="Valor mínimo" class="content-text-area" formControlName="min"/>
+                            <span matTextSuffix>%</span>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <label class="h7 mb-2">Máximo:</label>
+                        <mat-form-field class="w-100">
+                            <input matInput type="number" placeholder="Valor máximo" class="content-text-area" formControlName="max"/>
+                            <span matTextSuffix>%</span>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <label class="h7 mb-2">Por defecto:</label>
+                        <mat-form-field class="w-100">
+                            <input matInput type="number" placeholder="Valor por defecto" class="content-text-area" formControlName="default"/>
+                            <span matTextSuffix>%</span>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row w-100">
+                    <div class="col-6">
+                        <label class="h6 mb-2">Precio por Kg de CO2:</label>
+                        <mat-form-field class="w-100">
+                            <input matInput type="number" placeholder="Precio por Kg de CO2" class="content-text-area" formControlName="price_kg"/>
+                            <span matTextSuffix>€</span>
+                            @if (f['price_kg'].errors) {
+                                <mat-error>
+                                    @if (f['price_kg'].errors['required']) {
+                                        El precio por kg es obligatorio
+                                    }
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row w-100">
+                    <div class="col-6">
+                        <label class="h6 mb-2">Créditos:</label>
+                        <mat-form-field class="w-100">
+                            <input matInput type="number" placeholder="Créditos" class="content-text-area" formControlName="credits"/>
+                            @if (f['credits'].errors) {
+                                <mat-error>
+                                    @if (f['credits'].errors['required']) {
+                                        El número de créditos es obligatorio
+                                    }
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6">
+                        <label class="h6 mb-2">Precio por crédito:</label>
+                        <mat-form-field class="w-100">
+                            <input type="number" matInput placeholder="Precio por crédito" class="content-text-area" formControlName="cred_price"/>
+                            <span matTextSuffix>€</span>
+                            @if (f['cred_price'].errors) {
+                                <mat-error>
+                                    @if (f['cred_price'].errors['required']) {
+                                        El precio por crédito es obligatorio
+                                    }
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                </div>
+            </mat-dialog-content>
+            <mat-dialog-actions class="p-4 position-absolute bg-white gap-2" style="bottom: 0; right: 0;">
+                <button
+                    type="submit"
+                    color="primary"
+                    class="btn btn-danger rounded-pill"
+                    [disabled]="!globalConfigForm.valid">
+                    Guardar
+                </button>
+            </mat-dialog-actions>
+        </form>
+    }
+</div>

@@ -1,0 +1,105 @@
+<div class="bg-white h-100">
+    @if(isLoading) {
+        <div class="container h-100 d-flex justify-content-center align-items-center">
+            <app-loader></app-loader>
+        </div>
+    } @else {
+        <form (ngSubmit)="submitData()" [formGroup]="recomendationForm" novalidate>
+            <div class="position-sticky top-0 bg-white">
+                <h6 class="text-secondary" mat-dialog-title>
+                    {{ dialogData.isEdit ? 'Modificar pregunta frecuente' : 'Crear pregunta frecuente' }}
+                </h6>
+            </div>
+            <mat-dialog-content>
+                @if(frequentQuestionExists) {
+                    <div class="row w-100">
+                        <div class="col-12">
+                            <div class="alert alert-danger" role="alert">
+                                {{ errorMessage }}
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="row w-100">
+                    <div class="col-6">
+                        <label class="h6 mb-2">Nombre identificativo de la pregunta</label>
+                        <mat-form-field class="w-100">
+                            <input matInput (change)="checkItemExists($event)" placeholder="Nombre identificativo" class="content-text-area" formControlName="identify_lang_frequently_question_id"/>
+                            @if (f['identify_lang_frequently_question_id'].errors) {
+                                <mat-error>
+                                    @if (f['identify_lang_frequently_question_id'].errors['required']) {
+                                        El nombre identificativo es obligatorio
+                                    }
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6">
+                        <label class="h6 mb-2">Idioma:</label>
+                        <mat-form-field class="w-100">
+                            <mat-select formControlName="lang" (selectionChange)="checkItemExists($event)">
+                                <mat-option [value]="''">Seleccione</mat-option>
+                                <mat-option [value]="'es'">Castellano</mat-option>
+                                <mat-option [value]="'en'">Inglés</mat-option>
+                                <!-- <mat-option [value]="'ca'">Catalán</mat-option>
+                                <mat-option [value]="'gl'">Gallego</mat-option>
+                                <mat-option [value]="'eu'">Euskera</mat-option> -->
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row w-100">
+                    <div class="col-9">
+                        <label class="h6 mb-2">Pregunta:</label>
+                        <mat-form-field class="w-100">
+                            <input matInput placeholder="Título de recomendación" class="content-text-area" formControlName="title"/>
+                            @if (f['title'].errors) {
+                                <mat-error>
+                                    @if (f['title'].errors['required']) {
+                                        La pregunta es obligatoria
+                                    }
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                    <div class="col-3">
+                        <label class="h6 mb-2">Posición:</label>
+                        <mat-form-field class="w-100">
+                            <input matInput type="number" placeholder="Número de orden" class="content-text-area" formControlName="order_number"/>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row w-100">
+                    <div class="col-12">
+                        <label class="h6 mb-2">Respuesta:</label>
+                        <mat-form-field class="w-100">
+                            <textarea
+                                matInput
+                                placeholder="Texto de recomendación"
+                                cdkTextareaAutosize
+                                #autosize="cdkTextareaAutosize"
+                                formControlName="answer"
+                            ></textarea>
+                            @if (f['answer'].errors) {
+                                <mat-error>
+                                    @if (f['answer'].errors['required']) {
+                                        La respuesta es obligatoria
+                                    }
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                </div>
+            </mat-dialog-content>
+            <mat-dialog-actions class="p-4 position-absolute bg-white gap-2" style="bottom: 0; right: 0;">
+                <button
+                    type="submit"
+                    color="primary"
+                    class="btn btn-danger rounded-pill"
+                    [disabled]="!recomendationForm.valid">
+                    Guardar
+                </button>
+            </mat-dialog-actions>
+        </form>
+    }
+</div>

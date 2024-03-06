@@ -1,0 +1,90 @@
+<div class="bg-white h-100">
+    @if(isLoading) {
+        <div class="container h-100 d-flex justify-content-center align-items-center">
+            <app-loader></app-loader>
+        </div>
+    } @else {
+        <form (ngSubmit)="submitData()" [formGroup]="termsConditionsForm" novalidate>
+            <div class="position-sticky top-0 bg-white">
+                <h6 class="text-secondary" mat-dialog-title>
+                    {{ dialogData.isEdit ? 'Modificar término y condiciones' : 'Crear termino y condiciones' }}
+                </h6>
+            </div>
+            <mat-dialog-content>
+                @if(termsConditionsExists) {
+                    <div class="row w-100">
+                        <div class="col-12">
+                            <div class="alert alert-danger" role="alert">
+                                {{ errorMessage }}
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="row w-100">
+                    <div class="col-6">
+                        <label class="h6 mb-2">Nombre identificativo del término y condición</label>
+                        <mat-form-field class="w-100">
+                            <input
+                                matInput
+                                (change)="checkItemExists($event)"
+                                placeholder="Nombre identificativo"
+                                class="content-text-area"
+                                formControlName="identify_lang_text_view_id"
+                            />
+                            @if (f['identify_lang_text_view_id'].errors) {
+                                <mat-error>
+                                    @if (f['identify_lang_text_view_id'].errors['required']) {
+                                        El nombre identificativo es obligatorio
+                                    }
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6">
+                        <label class="h6 mb-2">Idioma:</label>
+                        <mat-form-field class="w-100">
+                            <mat-select formControlName="lang" (selectionChange)="checkItemExists($event)">
+                                <mat-option [value]="''">Seleccione</mat-option>
+                                <mat-option [value]="'es'">Castellano</mat-option>
+                                <mat-option [value]="'en'">Inglés</mat-option>
+                                <!-- <mat-option [value]="'ca'">Catalán</mat-option>
+                                <mat-option [value]="'gl'">Gallego</mat-option>
+                                <mat-option [value]="'eu'">Euskera</mat-option> -->
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row w-100">
+                    <div class="col-12">
+                        <label class="h6 mb-2">Título:</label>
+                        <mat-form-field class="w-100">
+                            <input matInput placeholder="Título del aviso legal" class="content-text-area" formControlName="name"/>
+                            @if (f['name'].errors) {
+                                <mat-error>
+                                    @if (f['name'].errors['required']) {
+                                        El título es obligatorio
+                                    }
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row w-100">
+                    <div class="col-12">
+                        <label class="h6 mb-2">Texto*:</label>
+                        <angular-editor formControlName="description_text" [config]="editorConfig"></angular-editor>
+                    </div>
+                </div>
+            </mat-dialog-content>
+            <mat-dialog-actions class="p-4 position-absolute bg-white gap-2" style="bottom: 0; right: 0;">
+                <button
+                    type="submit"
+                    color="primary"
+                    class="btn btn-danger rounded-pill"
+                    [disabled]="!termsConditionsForm.valid">
+                    Guardar
+                </button>
+            </mat-dialog-actions>
+        </form>
+    }
+</div>

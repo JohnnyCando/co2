@@ -1,84 +1,83 @@
-# Huella CO2
+# Acciona CO2 Backoffice
 
-Es una aplicación para comensar huella de carbono en base a un calculo generado por un cuestionario a resolver.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.9.
+
+This intuitive application enables administrators to seamlessly manage projects, recommendations, legal information, and user accounts. With user-friendly controls, administrators can create, edit, and delete project details. The recommendation feature facilitates the implementation of expert advice and best practices. Effortlessly access and manage critical legal documents to ensure compliance and informed decision-making. User administration capabilities allow for the management of user profiles, ensuring appropriate access levels. Simplify backoffice operations with the Acciona Project Management App, fostering efficiency, collaboration, and project success.
 
 ## Environment Variables
+ 
+To run this project, you will need to add the following environment variables to your environment.ts file.
+ 
+`hostApi` Url to connect to the backend.
 
-Para ejecutar este proyecto, deberá agregar las siguientes variables de entorno a su archivo .env
+## Development server
 
-`APP_PORT` Puerto para levantar en local default 3000
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-`APP_JWT_KEY` Secret JWT custom  junto a Api_key para generar la firma del json web token
+## Code scaffolding
 
-`APP_API_KEY`  Secret custom  junto a secret JWT para generar la firma del json web token  
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-`DB_HOST` Host de la base de datos de mongo db
+## Build
 
-`DB_PORT` Puerto de la base de datos de mongo db
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-`DB_PASSWORD` Password for connect to Mongo DB on AWS
+## Running unit tests
 
-`DB_USERNAME` Username for connect to Mongo DB on AWS
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-`AWS_ACCESS_KEY_ID` ID para identificarse con el servicio SMTP de AWS 
+## Running end-to-end tests
 
-`AWS_SECRET_ACCESS_KEY` Secret Key para identificarse con el servicio SMTP de AWS 
+Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-`AWS_DEFAULT_REGION` Region default de AWS para la configuracion del servicio SMTP de AWS
+## Comands to run different environments
 
-`DS_MERCHANT_MERCHANTCODE` Codigo indentificardor de Redsys para configurar el modulo de pagos
-
-`DS_MERCHANT_CURRENCY` Codigo identificativo de la moneda que se utilizará en Redsys para configurar el modulo de pagos Default : 978 "€"
-
-`DS_MERCHANT_TRANSACTIONTYPE` Codigo tipo de transaccion de Redsys para configurar el modulo de pagos
-
-`DS_MERCHANT_TERMINAL` Codigo del terminal asociada a tu cuenta de Redsys para configurar el modulo de pagos
-
-`DS_MERCHANT_MERCHANTURL` Url del comercio http://localhost:3000/api/v1/redsys/returFormView  remplazar (http://localhost:3000) modificar por dominio correspondiente del backend
-
-`DS_MERCHANT_URLOK` Url de retorno en caso de que el pago haya sido exitosa http://localhost:3000/api/v1/redsys/returnOK  remplazar (http://localhost:3000) modificar por dominio correspondiente del backend
-
-`DS_MERCHANT_URLKO` Url de retorno en caso de que el pago haya sido fallido http://localhost:3000/api/v1/redsys/returnKO  remplazar (http://localhost:3000) modificar por dominio correspondiente del backend
-
-`DS_MERCHANT_MERCHANTNAME` Nombre del comercio
-
-`DS_MERCHANT_CONSUMERLANGUAGE`  Codigo identificativo del idioma Default : 001 "español"
-
-`TVP_SECRET` Secret Key generada para autentificarse tu cuenta de redsys para la generacion de la firma
-
-`DS_SIGNATURE_VERSION` Codigo de tipo de encryptacion Default "HMAC_SHA256_V1" para validar la firma en el frontend para generar el form view
-
-## Installation
+### Local
 
 ```bash
- npm install
+  npm start
 ```
 
-## Running the app
+### Develop
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
- npm run start:dev
-
-# production mode
-$ yarn run start:prod
+  npm run start:development
 ```
 
-## Test
+### Staging
 
 ```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+  npm run start:staging
 ```
-## License
 
-Nest is [MIT licensed](LICENSE).
+### Production
+
+```bash
+  npm run start:production
+```
+
+## Comands to build different environments
+
+### Local
+
+```bash
+  npm build
+```
+
+### Develop
+
+```bash
+  npm run build:development
+```
+
+### Staging
+
+```bash
+  npm run build:staging
+```
+
+### Production
+
+```bash
+  npm run build:production
+```

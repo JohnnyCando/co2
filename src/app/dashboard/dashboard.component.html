@@ -1,0 +1,8 @@
+<mat-drawer-container class="h-100">
+    <mat-drawer mode="side" opened class="d-grid gap-2 h-100" style="width: 12vw;">
+        <app-side-nav (tabSelected)="onTabSelected($event)"></app-side-nav>
+    </mat-drawer>
+    <mat-drawer-content class="bg-light text-black p-5">
+        <router-outlet></router-outlet>
+    </mat-drawer-content>
+</mat-drawer-container>

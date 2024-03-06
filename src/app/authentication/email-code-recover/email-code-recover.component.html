@@ -1,0 +1,101 @@
+<div class="h-100 d-flex justify-content-center align-items-center bg-light">
+    <mat-card class="card bg-white text-center p-3" style="width: 25vw; height: 40vh;">
+        @if(isLoading) {
+            <div class="container h-100 d-flex justify-content-center align-items-center">
+                <app-loader></app-loader>
+            </div>
+        } @else {
+            <div class="text-center">
+                <img src="../../../assets/imgs/acciona_logo.png" width="30%">
+            </div>
+            <mat-card-content class="card-body d-flex flex-column align-items-center justify-content-center">
+                <div class="row w-100 justify-content-center">
+                    @if(!emailSent) {
+                        <form [formGroup]="sendEmailForm" (ngSubmit)="submitEmail()">
+                            <div class="row justify-content-center mb-3">
+                                <span>Escriba su correo para que podamos mandarle un email con el código de verificación.</span>
+                            </div>
+                            <div class="row justify-content-center">
+                                <mat-form-field class="w-75">
+                                    <input type="text" matInput placeholder="Email" formControlName="email">
+                                    @if (f['email'].errors) {
+                                        <mat-error>
+                                            @if (f['email'].errors['required']) {
+                                                El email es obligatorio
+                                            }
+                                            @if (f['email'].errors['email']) {
+                                                El email es inválido
+                                            }
+                                        </mat-error>
+                                    }
+                                </mat-form-field>
+                            </div>
+                            <div class="row text-align-center">
+                                <div class="col-12">
+                                    <button
+                                        type="submit"
+                                        color="primary"
+                                        class="btn btn-danger rounded-pill px-3"
+                                        [disabled]="!sendEmailForm.valid">
+                                        Enviar correo
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    } @else {
+                        <form [formGroup]="codeForm" (ngSubmit)="submitCode()">
+                            <div class="row justify-content-center mb-3">
+                                <span>Si no recibe el correo en unos minutos, pulse <a href="javascript:void(0);" class="cursor-pointer" (click)="resendEmail()">aquí</a> para volver a solicitarlo.</span>
+                            </div>
+                            <div class="d-flex flex-row gap-2 mb-4">
+                                <input
+                                    type="text"
+                                    maxlength="1"
+                                    id="digit0"
+                                    (keyup)="updateCodes($event, 0)"
+                                    class="form-control form-control-lg"
+                                    style="text-align: center;"
+                                >
+                                <input
+                                    type="text"
+                                    maxlength="1"
+                                    id="digit1"
+                                    (keyup)="updateCodes($event, 1)"
+                                    class="form-control form-control-lg"
+                                    style="text-align: center;"
+                                >
+                                <input
+                                    type="text"
+                                    maxlength="1"
+                                    id="digit2"
+                                    (keyup)="updateCodes($event, 2)"
+                                    class="form-control form-control-lg"
+                                    style="text-align: center;"
+                                >
+                                <input
+                                    type="text"
+                                    maxlength="1"
+                                    id="digit3"
+                                    (keyup)="updateCodes($event, 3)"
+                                    class="form-control form-control-lg"
+                                    style="text-align: center;"
+                                >
+                            </div>
+                            <div class="row text-align-center">
+                                <div class="col-12">
+                                    <button
+                                        type="submit"
+                                        color="primary"
+                                        class="btn btn-danger rounded-pill px-3"
+                                        [disabled]="!codeForm.valid">
+                                        Enviar código
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </mat-card-content>
+        }
+    </mat-card>
+</div>
